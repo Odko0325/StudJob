@@ -1,14 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import Logo from "../assets/studjob.png";
 const Header = () => {
   const navigate = useNavigate();
 
   return (
     <header className="main-header">
       <div className="logo-container" onClick={() => navigate('/')}>
-        <img src="/logo.png" alt="Logo" className="logo-img" />
-        <span className="logo-text">StudentJobs</span>
+      <img src={Logo} alt="Logo" className="h-16 w-auto cursor-pointer" />
+        
       </div>
       
       <nav className="main-nav">

@@ -1,66 +1,44 @@
+// UserContext.js
 import React, { createContext, useState, useEffect } from 'react';
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  // Load users from localStorage or initialize with default admin
-  const [users, setUsers] = useState(() => {
-    const savedUsers = localStorage.getItem('jobPortalUsers');
-    return savedUsers ? JSON.parse(savedUsers) : [
-      {
-        id: 1,
-        firstName: 'Admin',
-        lastName: 'User',
-        email: 'admin@example.com',
-        phoneNumber: '99119911',
-        password: 'admin123',
-        role: 'admin'
-      }
-    ];
-  });
-
-  // Track currently logged-in user
   const [currentUser, setCurrentUser] = useState(() => {
-    const savedUser = localStorage.getItem('currentUser') || 
-                      sessionStorage.getItem('currentUser');
-    return savedUser ? JSON.parse(savedUser) : null;
+    const saved = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    return saved ? JSON.parse(saved) : null;
   });
 
-  // Save users to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('jobPortalUsers', JSON.stringify(users));
-  }, [users]);
+  const registerUser = async (userData) => {
+    const res = await fetch('http://localhost:5000/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
 
-  // Register new user
-  const registerUser = (userData) => {
-    // Check if email already exists
-    if (users.some(user => user.email === userData.email)) {
-      throw new Error('Энэ имэйл хаяг аль хэдийн бүртгэгдсэн байна');
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Бүртгэл амжилтгүй боллоо');
     }
 
-    const newUser = {
-      ...userData,
-      id: Date.now() // Generate unique ID
-    };
-
-    setUsers(prevUsers => [...prevUsers, newUser]);
-    return newUser;
+    return await res.json();
   };
 
-  // Login user
-  const loginUser = (email, password, remember = false) => {
-    const user = users.find(user => 
-      user.email === email && 
-      user.password === password
-    );
+  const loginUser = async (email, password, remember = false) => {
+    const res = await fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-    if (!user) {
-      throw new Error('И-мэйл эсвэл нууц үг буруу байна');
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Нэвтрэх амжилтгүй боллоо');
     }
 
+    const user = await res.json();
     setCurrentUser(user);
-    
-    // Store session based on "remember me" choice
+
     if (remember) {
       localStorage.setItem('currentUser', JSON.stringify(user));
     } else {
@@ -70,25 +48,27 @@ export const UserProvider = ({ children }) => {
     return user;
   };
 
-  // Logout user
   const logoutUser = () => {
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
     sessionStorage.removeItem('currentUser');
   };
 
-  // Update user profile
-  const updateUser = (updatedData) => {
-    setUsers(prevUsers => 
-      prevUsers.map(user => 
-        user.id === currentUser.id ? { ...user, ...updatedData } : user
-      )
-    );
-    
-    // Update current user in storage
-    const updatedUser = { ...currentUser, ...updatedData };
+  const updateUser = async (updatedData) => {
+    const res = await fetch(`http://localhost:5000/api/users/${currentUser.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Шинэчлэхэд алдаа гарлаа');
+    }
+
+    const updatedUser = await res.json();
     setCurrentUser(updatedUser);
-    
+
     if (localStorage.getItem('currentUser')) {
       localStorage.setItem('currentUser', JSON.stringify(updatedUser));
     } else {
@@ -96,18 +76,8 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // Context value that will be provided to components
-  const value = {
-    users,
-    currentUser,
-    registerUser,
-    loginUser,
-    logoutUser,
-    updateUser
-  };
-
   return (
-    <UserContext.Provider value={value}>
+    <UserContext.Provider value={{ currentUser, registerUser, loginUser, logoutUser, updateUser }}>
       {children}
     </UserContext.Provider>
   );

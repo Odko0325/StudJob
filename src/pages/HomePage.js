@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mockJobs } from '../mockData';
-import '../styles.css';
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -9,8 +8,8 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const filteredJobs = mockJobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         job.company.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.company.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = activeCategory === 'all' || job.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
@@ -24,53 +23,57 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="home-page">
-      {/* Hero Section with Search */}
-      <div className="hero-section">
-        <div className="search-container">
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* Hero/Search Section */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-center mb-4">Ажлын зар хайх</h1>
+        <div className="flex justify-center gap-2">
           <input
             type="text"
-            placeholder="Ажлын зар хайх..."
+            placeholder="Ажлын нэр, байгууллага..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="search-button">
-            <i className="fas fa-search"></i>
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            Хайх
           </button>
         </div>
       </div>
 
-      {/* Categories */}
-      <div className="categories">
+      {/* Category Buttons */}
+      <div className="flex flex-wrap justify-center gap-3 mb-10">
         {categories.map(category => (
           <button
             key={category.id}
-            className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
             onClick={() => setActiveCategory(category.id)}
+            className={`px-4 py-2 rounded-full text-sm font-medium border transition 
+              ${activeCategory === category.id
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
             {category.name}
           </button>
         ))}
       </div>
 
-      {/* Job Listings */}
-      <div className="job-grid">
+      {/* Job Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredJobs.map(job => (
-          <div key={job.id} className="job-card">
-            <div className="job-header">
-              <span className={`job-category ${job.category}`}>
+          <div key={job.id} className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition">
+            <div className="flex justify-between items-center mb-3 text-sm text-gray-500">
+              <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
                 {categories.find(c => c.id === job.category)?.name}
               </span>
-              <span className="job-date">{job.postedDate}</span>
+              <span>{job.postedDate}</span>
             </div>
-            <h3>{job.title}</h3>
-            <p className="job-company">{job.company}</p>
-            <p className="job-description">{job.description}</p>
-            <div className="job-footer">
-              <span className="job-location">{job.location}</span>
-              <button 
-                className="view-button"
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">{job.title}</h3>
+            <p className="text-gray-600 mb-1">{job.company}</p>
+            <p className="text-gray-500 text-sm line-clamp-3 mb-4">{job.description}</p>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-500 text-sm">{job.location}</span>
+              <button
+                className="text-blue-600 hover:underline text-sm font-medium"
                 onClick={() => navigate(`/jobs/${job.id}`)}
               >
                 Дэлгэрэнгүй

@@ -6,13 +6,13 @@ import './styles.css';
 
 const App = () => {
   return (
-    <Router>
-      <UserProvider>
+    <UserProvider> {/* 👈 Энийг Router-н ГАДНА тавина */}
+      <Router>
         <div className="app-container">
           <AppRoutes />
         </div>
-      </UserProvider>
-    </Router>
+      </Router>
+    </UserProvider>
   );
 };
 

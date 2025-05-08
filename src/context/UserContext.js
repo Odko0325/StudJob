@@ -1,83 +1,85 @@
-// UserContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
-    return saved ? JSON.parse(saved) : null;
+    const saved =
+      localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    const parsed = saved ? JSON.parse(saved) : null;
+    return parsed && parsed.email ? parsed : null;
   });
 
-  const registerUser = async (userData) => {
-    const res = await fetch('http://localhost:5000/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
+  // ⛳ Бүртгүүлэх
+  const registerUser = (userData) => {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Бүртгэл амжилтгүй боллоо');
+    const existing = users.find(u => u.email === userData.email);
+    if (existing) {
+      throw new Error('Энэ и-мэйл аль хэдийн бүртгэгдсэн байна.');
     }
 
-    return await res.json();
+    const newUser = {
+      id: Date.now(),
+      ...userData,
+    };
+
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    return { success: true };
   };
 
+  // ⛳ Нэвтрэх (async болголоо!)
   const loginUser = async (email, password, remember = false) => {
-    const res = await fetch('http://localhost:5000/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const found = users.find(u => u.email === email && u.password === password);
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Нэвтрэх амжилтгүй боллоо');
+    if (!found || !found.email) {
+      throw new Error('И-мэйл эсвэл нууц үг буруу байна.');
     }
 
-    const user = await res.json();
-    setCurrentUser(user);
+    setCurrentUser(found);
 
-    if (remember) {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-    } else {
-      sessionStorage.setItem('currentUser', JSON.stringify(user));
-    }
+    const storage = remember ? localStorage : sessionStorage;
+    storage.setItem('currentUser', JSON.stringify(found));
 
-    return user;
+    return found;
   };
 
+  // ⛳ Гарах
   const logoutUser = () => {
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
     sessionStorage.removeItem('currentUser');
   };
 
-  const updateUser = async (updatedData) => {
-    const res = await fetch(`http://localhost:5000/api/users/${currentUser.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedData),
-    });
+  // ⛳ Хэрэглэгчийн мэдээлэл шинэчлэх
+  const updateUser = (updatedData) => {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const index = users.findIndex(u => u.id === currentUser?.id);
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Шинэчлэхэд алдаа гарлаа');
-    }
+    if (index !== -1) {
+      const updatedUser = { ...users[index], ...updatedData };
+      users[index] = updatedUser;
 
-    const updatedUser = await res.json();
-    setCurrentUser(updatedUser);
+      localStorage.setItem('users', JSON.stringify(users));
+      setCurrentUser(updatedUser);
 
-    if (localStorage.getItem('currentUser')) {
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-    } else {
-      sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
+      const storage = localStorage.getItem('currentUser') ? localStorage : sessionStorage;
+      storage.setItem('currentUser', JSON.stringify(updatedUser));
     }
   };
 
   return (
-    <UserContext.Provider value={{ currentUser, registerUser, loginUser, logoutUser, updateUser }}>
+    <UserContext.Provider
+      value={{
+        currentUser,
+        registerUser,
+        loginUser,
+        logoutUser,
+        updateUser,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

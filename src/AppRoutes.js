@@ -7,11 +7,13 @@ import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import JobDetails from './pages/JobDetails';
 import Header from './components/Header';
-import Footer from './components/Footer'; 
+import Footer from './components/Footer';
 import CompanyRegister from './pages/employer/CompanyRegisterForm';
 import EmployeeRegisterForm from './pages/employer/EmployeeRegister';
+import ProtectedRoute from './components/ProtectedRoute'; 
+import EventList from './pages/student/Event';
 
-const AppRoutes = () => { 
+const AppRoutes = () => {
   return (
     <div className="app-container">
       <Header />
@@ -23,7 +25,18 @@ const AppRoutes = () => {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
-          <Route path="/company" element={<CompanyRegister />} />
+          <Route path="/events" element={<EventList />} />
+          
+          {/* ✅ Зөвхөн нэвтэрсэн хэрэглэгч орох */}
+          <Route
+            path="/company"
+            element={
+              <ProtectedRoute>
+                <CompanyRegister />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/register-employee" element={<EmployeeRegisterForm />} />
         </Routes>
       </main>

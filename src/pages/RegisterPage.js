@@ -16,12 +16,10 @@ const RegisterPage = () => {
     phoneNumber: '',
     password: '',
     confirmPassword: '',
-    // student
     school: '',
     major: '',
-    // employer
     companyName: '',
-    position: '',
+    positionLevel: ''
   });
 
   const [error, setError] = useState('');
@@ -36,7 +34,7 @@ const RegisterPage = () => {
     'Мандах Их Сургууль', 'Нийслэлийн их сургууль'
   ];
 
-  const universityOptions = mongolianUniversities.map((name) => ({
+  const universityOptions = mongolianUniversities.map(name => ({
     value: name,
     label: name,
   }));
@@ -50,33 +48,29 @@ const RegisterPage = () => {
     e.preventDefault();
 
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.phoneNumber || !formData.password) {
-      error('Бүх талбарыг бөглөнө үү');
-      return; 
+      alert('Бүх талбарыг бөглөнө үү');
+      return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Нууц үг таарахгүй байна');
+      alert('Нууц үг таарахгүй байна');
       return;
     }
 
     if (formData.role === 'student' && (!formData.school || !formData.major)) {
-      setError('Сургуулийн нэр болон мэргэжлээ оруулна уу');
+      alert('Сургуулийн нэр болон мэргэжлээ оруулна уу');
       return;
     }
 
     if (formData.role === 'employer' && !formData.companyName) {
-      setError('Байгууллагын нэрийг оруулна уу');
+      alert('Байгууллагын нэрийг оруулна уу');
       return;
     }
 
     try {
       registerUser(formData);
-      navigate('/login', {
-        state: {
-          successMessage: 'Бүртгэл амжилттай боллоо! Нэвтрэх хэсэгт очно уу',
-          registeredEmail: formData.email,
-        }
-      });
+      alert('Бүртгэл амжилттай боллоо!');
+      navigate('/login');
     } catch (err) {
       setError(err.message);
     }
@@ -92,7 +86,11 @@ const RegisterPage = () => {
         <div className="w-full md:w-1/2 p-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Бүртгүүлэх</h2>
 
-         
+          {error && (
+            <div className="bg-red-100 text-red-600 text-sm text-center px-4 py-2 rounded mb-4">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -106,55 +104,28 @@ const RegisterPage = () => {
               >
                 <option value="student">Оюутан</option>
                 <option value="employer">Ажил олгогч</option>
+                <option value="employer">Админ</option>
               </select>
             </div>
 
             <div>
               <label htmlFor="firstName" className="block font-medium mb-1">Нэр</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
-              />
+              <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
             </div>
 
             <div>
               <label htmlFor="lastName" className="block font-medium mb-1">Овог</label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
-              />
+              <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
             </div>
 
             <div>
               <label htmlFor="email" className="block font-medium mb-1">И-мэйл</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
-              />
+              <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
             </div>
 
             <div>
               <label htmlFor="phoneNumber" className="block font-medium mb-1">Утас</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
-              />
+              <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
             </div>
 
             {formData.role === 'student' && (
@@ -174,14 +145,7 @@ const RegisterPage = () => {
 
                 <div>
                   <label htmlFor="major" className="block font-medium mb-1">Мэргэжил</label>
-                  <input
-                    type="text"
-                    id="major"
-                    name="major"
-                    value={formData.major}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded"
-                  />
+                  <input type="text" id="major" name="major" value={formData.major} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
                 </div>
               </>
             )}
@@ -190,60 +154,36 @@ const RegisterPage = () => {
               <>
                 <div>
                   <label htmlFor="companyName" className="block font-medium mb-1">Байгууллагын нэр</label>
-                  <input
-                    type="text"
-                    id="companyName"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded"
-                  />
+                  <input type="text" id="companyName" name="companyName" value={formData.companyName} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
                 </div>
 
-                <div className="md:col-span-2">
-            <label className="block mb-2 font-medium">Албан тушаалын түвшин</label>
-            <select name="positionLevel" value={formData.positionLevel} onChange={handleChange} className="w-full px-4 py-2 rounded bg-gray-200">
-              <option value="">Сонгох</option>
-              <option value="Удирдах">Удирдах ажилтан</option>
-              <option value="Ахлах">Ахлах ажилтан</option>
-              <option value="Дунд шатны">Дунд шатны ажилтан</option>
-              <option value="Анхан">Анхан шатны ажилтан</option>
-              <option value="Гэрээт">Гэрээт ажилтан</option>
-              <option value="Цагийн">Цагийн ажилтан</option>
-              <option value="Бусад">Бусад</option>
-            </select>
-          </div>
+                <div>
+                  <label className="block mb-2 font-medium">Албан тушаалын түвшин</label>
+                  <select name="positionLevel" value={formData.positionLevel} onChange={handleChange} className="w-full px-4 py-2 rounded bg-gray-200">
+                    <option value="">Сонгох</option>
+                    <option value="Удирдах">Удирдах ажилтан</option>
+                    <option value="Ахлах">Ахлах ажилтан</option>
+                    <option value="Дунд шатны">Дунд шатны ажилтан</option>
+                    <option value="Анхан">Анхан шатны ажилтан</option>
+                    <option value="Гэрээт">Гэрээт ажилтан</option>
+                    <option value="Цагийн">Цагийн ажилтан</option>
+                    <option value="Бусад">Бусад</option>
+                  </select>
+                </div>
               </>
             )}
 
             <div>
               <label htmlFor="password" className="block font-medium mb-1">Нууц үг</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
-              />
+              <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
             </div>
 
             <div>
               <label htmlFor="confirmPassword" className="block font-medium mb-1">Нууц үг давтах</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
-              />
+              <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded" />
             </div>
 
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200 font-semibold"
-            >
+            <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200 font-semibold">
               Бүртгүүлэх
             </button>
           </form>

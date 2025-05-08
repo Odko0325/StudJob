@@ -1,15 +1,27 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { mockJobs } from '../mockData';
 import { Phone, MapPin } from 'lucide-react';
+import { UserContext } from '../context/UserContext';
 
 const JobDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { currentUser } = useContext(UserContext);
+
   const job = mockJobs.find((job) => job.id.toString() === id);
 
   if (!job) {
     return <div className="text-center text-red-500 mt-10">Ажлын зар олдсонгүй</div>;
   }
+
+  const handleCvClick = () => {
+    if (!currentUser || !currentUser.email) {
+      alert('CV илгээхийн тулд та эхлээд нэвтэрнэ үү.');
+      return;
+    }
+    navigate(`/jobs/${job.id}/apply`);
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -32,16 +44,23 @@ const JobDetail = () => {
           </div>
 
           <div className="flex gap-2">
-            <button className="bg-gray-200 text-gray-700 px-4 py-1 rounded hover:bg-gray-300 transition">Бүтэн цагаар</button>
-            <button className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition">CV илгээх</button>
+            <button className="bg-gray-200 text-gray-700 px-4 py-1 rounded hover:bg-gray-300 transition">
+              Бүтэн цагаар
+            </button>
+            <button
+              className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition"
+              onClick={handleCvClick}
+            >
+              CV илгээх
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Job Description Card */}
+      {/* Job Description */}
       <div className="bg-white shadow-md rounded-xl p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Ажлын зарын мэдээлэл</h3>
-        
+
         <p className="mb-4 text-gray-700">
           <strong>Цалин:</strong> {job.salary}
         </p>

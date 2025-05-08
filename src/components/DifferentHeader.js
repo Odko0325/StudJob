@@ -42,24 +42,7 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Доод хэсэг: Бүртгүүлэх / Ажилтан хайх */}
-        <div className="flex flex-col items-center gap-3 mt-2">
-  <p className="text-lg font-medium">StudJob-д тавтай морил</p>
-  <div className="flex justify-center gap-4">
-    <button
-      onClick={() => navigate('/register')}
-      className="bg-white text-[#2C3E50] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"
-    >
-      Бүртгүүлэх
-    </button>
-    <button
-      onClick={() => navigate('/company')}
-      className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
-    >
-      Ажлын зар оруулах
-    </button>
-  </div>
-</div>
+      
       </div>
     </header>
   );

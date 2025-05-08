@@ -24,22 +24,6 @@ const HomePage = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Hero/Search Section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-center mb-4">Ажлын зар хайх</h1>
-        <div className="flex justify-center gap-2">
-          <input
-            type="text"
-            placeholder="Ажлын нэр, байгууллага..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-            Хайх
-          </button>
-        </div>
-      </div>
 
       {/* Category Buttons */}
       <div className="flex flex-wrap justify-center gap-3 mb-10">

@@ -36,11 +36,7 @@ const StudentDashboard = () => {
     });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser');
-    sessionStorage.removeItem('currentUser');
-    navigate('/login');
-  };
+  
 
   const categories = [
     { id: 'all', name: 'Бүгд' },
@@ -63,12 +59,7 @@ const StudentDashboard = () => {
           <h1 className="text-2xl font-semibold text-center w-full">
             Сүүлийн үеийн зарууд
           </h1>
-          <button
-            onClick={handleLogout}
-            className="absolute top-6 right-6 btn btn-outline border px-4 py-2 rounded hover:bg-gray-100"
-          >
-            Logout
-          </button>
+          
         </div>
 
         {/* Категори сонголт */}

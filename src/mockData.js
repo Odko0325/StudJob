@@ -3,13 +3,14 @@ export const mockJobs = [
     id: 1,
     title: "Кассчин",
     company: "Supermart ХХК",
+    logo: './assets/mobicom-removebg-preview.png',
     description: "Касс дээр ажиллах тууштай ажилтан авна. Ээлжийн хуваарьтай.",
     category: "part-time",
     location: "Баянзүрх дүүрэг",
     salary: "1,200,000₮/сар",
     postedDate: "3 өдрийн өмнө",
     requirements: ["Хариуцлагатай", "Нягт нямбай"],
-    companyLogo: "https://via.placeholder.com/60"
+    
   },
   {
     id: 2,
@@ -22,7 +23,7 @@ export const mockJobs = [
     salary: "8,000₮/цаг",
     postedDate: "1 өдрийн өмнө",
     requirements: ["Харилцааны чадвар"],
-    companyLogo: "https://via.placeholder.com/60"
+    
   },
   {
     id: 3,
@@ -34,7 +35,7 @@ export const mockJobs = [
     salary: "Урамшуулалтай",
     postedDate: "Өчигдөр",
     requirements: ["Figma", "Дизайны сонирхолтой байх"],
-    companyLogo: "https://via.placeholder.com/60"
+    
   },
   {
     id: 4,
@@ -46,7 +47,7 @@ export const mockJobs = [
     salary: "2,000,000₮/сар",
     postedDate: "2 өдрийн өмнө",
     requirements: ["HR туршлага", "Их дээд сургууль төгссөн байх"],
-    companyLogo: "https://via.placeholder.com/60"
+    
   },
   
   {
@@ -59,7 +60,7 @@ export const mockJobs = [
     salary: "Урамшуулал",
     postedDate: "Өнөөдөр",
     requirements: ["React", "Git мэдлэгтэй байх"],
-    companyLogo: "https://via.placeholder.com/60"
+    
   },
   
   {
@@ -72,7 +73,7 @@ export const mockJobs = [
     salary: "3,500,000₮/сар",
     postedDate: "3 өдрийн өмнө",
     requirements: ["Node.js", "MongoDB", "REST API"],
-    companyLogo: "https://via.placeholder.com/60"
+    
   },
   
   

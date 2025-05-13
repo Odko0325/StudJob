@@ -6,17 +6,16 @@ import RegisterPage from './pages/RegisterPage';
 import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import JobDetails from './pages/JobDetails';
-// ❌ Header-г устгана
 import Footer from './components/Footer';
 import CompanyRegister from './pages/employer/CompanyRegisterForm';
 import EmployeeRegisterForm from './pages/employer/EmployeeRegister';
 import ProtectedRoute from './components/ProtectedRoute';
 import EventList from './pages/student/Event';
+import ApplyCV from './pages/student/ApplyCV';
 
 const AppRoutes = () => {
   return (
     <div className="app-container">
-      {/* ❌ <Header /> -ийг хассан */}
       <main className="main-content">
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -26,6 +25,8 @@ const AppRoutes = () => {
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/events" element={<EventList />} />
+          <Route path="/jobs/:id/apply" element={<ApplyCV />} />
+
 
           <Route
             path="/company"

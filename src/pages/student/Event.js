@@ -1,7 +1,7 @@
 import React from 'react';
 import { mockEvents } from '../../mockData';
 import khaan from '../../assets/khaan.png';
-
+import Header from '../../components/StudentHeader';
 
 const EventCard = ({ event }) => {
   return (
@@ -32,12 +32,15 @@ const EventCard = ({ event }) => {
 
 const EventList = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Онцлох эвент</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockEvents.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
+    <div>
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 py-10">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Онцлох эвент</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {mockEvents.map((event) => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </div>
       </div>
     </div>
   );

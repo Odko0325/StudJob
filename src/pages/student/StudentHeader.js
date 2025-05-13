@@ -1,15 +1,22 @@
-import React, { useState} from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../assets/studjob.png';
+import Logo from '../../assets/studjob.png';
 import { FaSearch } from 'react-icons/fa';
-
+import { UserContext } from '../../context/UserContext'; // ✅ нэмнэ
 
 const Header = () => {
   const navigate = useNavigate();
-  
+  const { currentUser } = useContext(UserContext); // ✅ хэрэглэгчийг авна
   const [searchTerm, setSearchTerm] = useState('');
 
-  
+  // ✅ Ажлын зар товчны функц
+  const handlePostJob = () => {
+    if (!currentUser) {
+      alert('Уучлаарай, та эхлээд нэвтэрсэн байх шаардлагатай.');
+      return;
+    }
+    navigate('/company');
+  };
 
   return (
     <header className="w-full bg-[#2C3E50] text-white py-6">
@@ -43,8 +50,20 @@ const Header = () => {
           </div>
         </div>
 
-        
-        
+        {/* Доод хэсэг: Бүртгүүлэх / Ажилтан хайх */}
+        <div className="flex flex-col items-center gap-3 mt-2">
+          <p className="text-lg font-medium">StudJob-д тавтай морил</p>
+          <div className="flex justify-center gap-4">
+            
+            <button
+  onClick={() => alert('Уучлаарай, та нэвтэрсэн байх шаардлагатай.')} // 👈 энэ хэсгийг нэмнэ
+  className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
+>
+  Ажлын зар оруулах
+</button>
+
+          </div>
+        </div>
       </div>
     </header>
   );

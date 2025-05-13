@@ -20,7 +20,7 @@ const Header = () => {
 
   return (
     <header className="w-full bg-[#2C3E50] text-white py-6">
-      <div className="max-w-screen-2xl mx-auto px-4 flex flex-col gap-4">
+      <div className="w-full px-6 flex flex-col gap-4">
         {/* Дээд хэсэг: Logo + хайлт + нэвтрэх */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4" onClick={() => navigate('/')}>

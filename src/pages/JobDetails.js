@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { mockJobs } from '../mockData';
 import { Phone, MapPin, Star } from 'lucide-react';
 import { UserContext } from '../context/UserContext';
-import Header from '../components/Header';
+import StudentHeader from '../components/StudentHeader';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -17,16 +17,44 @@ const JobDetail = () => {
   }
 
   const handleCvClick = () => {
+    const storedCV = JSON.parse(localStorage.getItem('myCV'));
+
     if (!currentUser || !currentUser.email) {
       alert('CV илгээхийн тулд та эхлээд нэвтэрнэ үү.');
       return;
     }
-    navigate(`/jobs/${job.id}/apply`);
+
+    if (!storedCV) {
+      const confirm = window.confirm("Та CV профайл бүртгүүлээгүй байна. Одоо бүртгэх үү?");
+      if (confirm) navigate('/mycv');
+      return;
+    }
+
+    const submissions = JSON.parse(localStorage.getItem('cvSubmissions')) || [];
+    const alreadySubmitted = submissions.find(
+      (entry) => entry.jobId === job.id && entry.email === storedCV.email
+    );
+
+    if (alreadySubmitted) {
+      alert('Та энэ ажилд аль хэдийн CV илгээсэн байна.');
+      return;
+    }
+
+    submissions.push({
+      jobId: job.id,
+      jobTitle: job.title,
+      company: job.company,
+      submittedAt: new Date().toISOString(),
+      ...storedCV,
+    });
+
+    localStorage.setItem('cvSubmissions', JSON.stringify(submissions));
+    alert('CV амжилттай илгээгдлээ!');
   };
 
   return (
     <>
-      <Header />
+      <StudentHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-6">
         {/* Зүүн тал: Ажлын дэлгэрэнгүй */}

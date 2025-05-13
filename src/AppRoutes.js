@@ -11,7 +11,8 @@ import CompanyRegister from './pages/employer/CompanyRegisterForm';
 import EmployeeRegisterForm from './pages/employer/EmployeeRegister';
 import ProtectedRoute from './components/ProtectedRoute';
 import EventList from './pages/student/Event';
-import ApplyCV from './pages/student/ApplyCV';
+import MyCV from './pages/student/MyCV';
+
 
 const AppRoutes = () => {
   return (
@@ -25,7 +26,8 @@ const AppRoutes = () => {
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/events" element={<EventList />} />
-          <Route path="/jobs/:id/apply" element={<ApplyCV />} />
+          <Route path="/mycv" element={<MyCV />} />
+          
 
 
           <Route

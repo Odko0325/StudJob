@@ -12,17 +12,22 @@ const StudentDashboard = () => {
     return stored ? JSON.parse(stored) : [];
   });
 
+  const [filters, setFilters] = useState({
+    field: 'all',
+    daysPerWeek: 'all',
+    shift: 'all',
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const user =
       JSON.parse(localStorage.getItem('currentUser')) ||
       JSON.parse(sessionStorage.getItem('currentUser'));
-
     if (!user) {
       navigate('/login');
     } else {
-      setJobs(mockJobs);
+      setJobs(mockJobs); // mockJobs should contain field, shift, daysPerWeek
     }
   }, [navigate]);
 
@@ -36,8 +41,6 @@ const StudentDashboard = () => {
     });
   };
 
-  
-
   const categories = [
     { id: 'all', name: 'Бүгд' },
     { id: 'professional', name: 'Мэргэжлийн ажил' },
@@ -46,8 +49,11 @@ const StudentDashboard = () => {
     { id: 'event', name: 'Эвент' },
   ];
 
-  const filteredJobs = jobs.filter(
-    (job) => activeCategory === 'all' || job.category === activeCategory
+  const filteredJobs = jobs.filter((job) =>
+    (activeCategory === 'all' || job.category === activeCategory) &&
+    (filters.field === 'all' || job.field === filters.field) &&
+    (filters.daysPerWeek === 'all' || job.daysPerWeek === Number(filters.daysPerWeek)) &&
+    (filters.shift === 'all' || job.shift === filters.shift)
   );
 
   return (
@@ -55,35 +61,65 @@ const StudentDashboard = () => {
       <StudentHeader />
 
       <div className="container mx-auto p-4">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-center w-full">
-            Сүүлийн үеийн зарууд
-          </h1>
-          
-        </div>
+        <h1 className="text-2xl font-semibold text-center mb-6">Сүүлийн үеийн зарууд</h1>
 
         {/* Категори сонголт */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => {
-                if (category.id === 'event') {
-                  navigate('/events');
-                } else {
-                  setActiveCategory(category.id);
-                }
-              }}
-              className={`px-4 py-2 rounded-full text-sm font-medium border transition 
-                ${
-                  activeCategory === category.id
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+              onClick={() =>
+                category.id === 'event'
+                  ? navigate('/events')
+                  : setActiveCategory(category.id)
+              }
+              className={`px-4 py-2 rounded-full text-sm font-medium border transition ${
+                activeCategory === category.id
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
             >
               {category.name}
             </button>
           ))}
+        </div>
+
+        {/* Шүүлтүүрүүд */}
+        <div className="flex flex-wrap gap-4 justify-center mb-10">
+          <select
+            value={filters.field}
+            onChange={(e) => setFilters({ ...filters, field: e.target.value })}
+            className="border px-4 py-2 rounded text-sm"
+          >
+            <option value="all">Мэргэжлийн салбар</option>
+            <option value="Програм хангамж">Програм хангамж</option>
+            <option value="Дизайн">Дизайн</option>
+            <option value="Санхүү">Санхүү</option>
+            <option value="Боловсрол">Боловсрол</option>
+            <option value="Хүний нөөц">Хүний нөөц</option>
+          </select>
+
+          <select
+            value={filters.daysPerWeek}
+            onChange={(e) => setFilters({ ...filters, daysPerWeek: e.target.value })}
+            className="border px-4 py-2 rounded text-sm"
+          >
+            <option value="all">7 хоногт хэдэн өдөр</option>
+            <option value="2">2 өдөр</option>
+            <option value="3">3 өдөр</option>
+            <option value="4">4 өдөр</option>
+            <option value="5">5 өдөр</option>
+          </select>
+
+          <select
+            value={filters.shift}
+            onChange={(e) => setFilters({ ...filters, shift: e.target.value })}
+            className="border px-4 py-2 rounded text-sm"
+          >
+            <option value="all">Ажлын цаг</option>
+            <option value="Өглөө">Өглөө</option>
+            <option value="Орой">Орой</option>
+          </select>
         </div>
 
         {/* Зарын картууд */}
@@ -91,20 +127,18 @@ const StudentDashboard = () => {
           {filteredJobs.map((job) => (
             <div
               key={job.id}
-              onClick={() => navigate(`/jobs/${job.id}`)}
-              className="relative border p-4 rounded shadow hover:shadow-xl transition-all cursor-pointer hover:scale-[1.02]"
+              className="relative border p-4 rounded shadow hover:shadow-xl transition-all hover:scale-[1.02] bg-white"
             >
-              {/* Bookmark icon */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleBookmark(job.id);
                 }}
-                className="absolute top-3 right-3 z-10 transition-transform transform hover:scale-125"
+                className="absolute top-3 right-3 z-10"
                 title="Хадгалах"
               >
                 <FaBookmark
-                  className={`w-5 h-5 transition-colors duration-200 ${
+                  className={`w-5 h-5 ${
                     bookmarkedJobs.includes(job.id)
                       ? 'text-blue-600'
                       : 'text-gray-400 hover:text-blue-500'
@@ -112,31 +146,25 @@ const StudentDashboard = () => {
                 />
               </button>
 
-              {/* Гарчиг */}
-              <h3 className="text-lg font-bold mb-2 mt-4">{job.title}</h3>
+              <h3 className="text-lg font-bold mb-1">{job.title}</h3>
               <p className="text-gray-600">{job.company}</p>
-              <p className="text-sm text-gray-500 mt-2 line-clamp-3">{job.description}</p>
-
-              {/* 🕒 Date (зүүн) — Location (баруун) */}
-              <div className="flex justify-between items-center text-sm text-gray-500 mt-4">
-                <span>{job.postedDate}</span>
-                <span>{job.location}</span>
-              </div>
-
-              {/* CV илгээх – баруун талд */}
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    alert('CV илгээх');
-                  }}
-                  className="px-4 py-1.5 bg-[#2C3E50] text-white rounded-full font-medium text-sm hover:bg-[#1f2e3d] transition duration-200 shadow-sm"
-                >
-                  CV илгээх
-                </button>
-              </div>
+              <p className="text-sm text-gray-500">{job.description}</p>
+              <p className="text-sm mt-2 text-gray-500">{job.location}</p>
+              <p className="text-sm text-gray-500">
+                {job.daysPerWeek} өдөр • {job.shift} ээлж
+              </p>
             </div>
           ))}
+        </div>
+
+        {/* Бусад зар үзэх товч */}
+        <div className="mt-10 flex justify-center">
+          <button
+            onClick={() => navigate('/student-jobs')}
+            className="px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition"
+          >
+            ➤ Бусад ажлын заруудыг үзэх
+          </button>
         </div>
       </div>
     </>

@@ -12,7 +12,11 @@ import EmployeeRegisterForm from './pages/employer/EmployeeRegister';
 import ProtectedRoute from './components/ProtectedRoute';
 import EventList from './pages/student/Event';
 import MyCV from './pages/student/MyCV';
-
+import SentCVs from './pages/student/sentCV';
+import CompaniesWorked from './pages/student/CompaniesWorked';
+import JobOffers from './pages/student/JobOffers';
+import StudentJobSearch from './pages/student/studentJobSearch'; 
+import EmployerHome from './pages/employer/EmployerHome'; 
 
 const AppRoutes = () => {
   return (
@@ -27,7 +31,13 @@ const AppRoutes = () => {
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/events" element={<EventList />} />
           <Route path="/mycv" element={<MyCV />} />
-          
+          <Route path="/sent-cvs" element={<SentCVs />} />
+          <Route path="/companies-worked" element={<CompaniesWorked />} />   
+          <Route path="/job-offers" element={<JobOffers />} />
+          <Route path="/student-jobs" element={<StudentJobSearch />} />
+          <Route path="/employer" element={<EmployerHome />} />
+          <Route path="/company" element={<CompanyRegister />} />
+      
 
 
           <Route

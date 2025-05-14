@@ -9,12 +9,18 @@ const Header = () => {
   const { currentUser } = useContext(UserContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [openNotif, setOpenNotif] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
   const notifRef = useRef(null);
+  const menuRef = useRef(null);
 
+  // Гадаа дарвал цэсүүдийг хаах
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (notifRef.current && !notifRef.current.contains(e.target)) {
         setOpenNotif(false);
+      }
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpenMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -31,7 +37,7 @@ const Header = () => {
     <header className="w-full bg-[#2C3E50] text-white py-4 relative">
       <div className="w-full px-6 flex flex-col gap-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('/')}> 
+          <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('/')}>
             <img src={Logo} alt="Logo" className="w-60 h-16" />
           </div>
 
@@ -54,6 +60,7 @@ const Header = () => {
                 <FaHeart className="w-5 h-5" />
               </button>
 
+              {/* Notification */}
               <div ref={notifRef} className="relative">
                 <button
                   onClick={() => setOpenNotif(!openNotif)}
@@ -82,9 +89,44 @@ const Header = () => {
                 )}
               </div>
 
-              <button onClick={() => navigate('/profile')} className="hover:text-blue-300 transition" title="Профайл">
-                <FaUser className="w-5 h-5" />
-              </button>
+              {/* User menu */}
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setOpenMenu(!openMenu)}
+                  className="hover:text-blue-300 transition"
+                  title="Профайл"
+                >
+                  <FaUser className="w-5 h-5" />
+                </button>
+
+                {openMenu && (
+                  <div className="absolute right-0 mt-2 w-60 bg-white text-gray-800 rounded shadow-lg z-50">
+                    <ul className="divide-y text-sm">
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/mycv')}>
+                        📝 Миний CV
+                      </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/sent-cvs')}>
+                        📤 Илгээсэн CV
+                      </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/companies-worked')}>
+                        🏢 Ажилласан компаниуд
+                      </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/job-offers')}>
+                        💼 Ажлын санал
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+                        onClick={() => {
+                          localStorage.removeItem('currentUser');
+                          navigate('/login');
+                        }}
+                      >
+                        🚪 Гарах
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

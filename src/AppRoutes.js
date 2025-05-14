@@ -17,7 +17,7 @@ import CompaniesWorked from './pages/student/CompaniesWorked';
 import JobOffers from './pages/student/JobOffers';
 import StudentJobSearch from './pages/student/studentJobSearch'; 
 import EmployerHome from './pages/employer/EmployerHome'; 
-
+import ViewReceivedCV from './pages/employer/ViewReceived';
 const AppRoutes = () => {
   return (
     <div className="app-container">
@@ -37,6 +37,7 @@ const AppRoutes = () => {
           <Route path="/student-jobs" element={<StudentJobSearch />} />
           <Route path="/employer" element={<EmployerHome />} />
           <Route path="/company" element={<CompanyRegister />} />
+          <Route path="/view-received-cv" element={<ViewReceivedCV />} />
       
 
 

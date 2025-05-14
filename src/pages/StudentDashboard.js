@@ -27,7 +27,7 @@ const StudentDashboard = () => {
     if (!user) {
       navigate('/login');
     } else {
-      setJobs(mockJobs); // mockJobs should contain field, shift, daysPerWeek
+      setJobs(mockJobs);
     }
   }, [navigate]);
 
@@ -39,6 +39,32 @@ const StudentDashboard = () => {
       localStorage.setItem('bookmarkedJobs', JSON.stringify(updated));
       return updated;
     });
+  };
+
+  const handleSendCV = (job) => {
+    const user =
+      JSON.parse(localStorage.getItem('currentUser')) ||
+      { name: 'Оюутан', email: 'student@example.com' };
+
+    const newCV = {
+      id: Date.now(),
+      name: user.name,
+      email: user.email,
+      jobTitle: job.title,
+      company: job.company,
+      sentDate: new Date().toISOString().split('T')[0],
+      fileName: `${user.name}_cv.pdf`,
+    };
+
+    // Илгээсэн CV жагсаалтад нэмэх
+    const existingSent = JSON.parse(localStorage.getItem('sentCVs')) || [];
+    localStorage.setItem('sentCVs', JSON.stringify([...existingSent, newCV]));
+
+    // Ажил олгогчид очих CV жагсаалт
+    const received = JSON.parse(localStorage.getItem('receivedCVs')) || [];
+    localStorage.setItem('receivedCVs', JSON.stringify([...received, newCV]));
+
+    alert('CV амжилттай илгээгдлээ');
   };
 
   const categories = [
@@ -59,7 +85,6 @@ const StudentDashboard = () => {
   return (
     <>
       <StudentHeader />
-
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-semibold text-center mb-6">Сүүлийн үеийн зарууд</h1>
 
@@ -148,11 +173,23 @@ const StudentDashboard = () => {
 
               <h3 className="text-lg font-bold mb-1">{job.title}</h3>
               <p className="text-gray-600">{job.company}</p>
-              <p className="text-sm text-gray-500">{job.description}</p>
-              <p className="text-sm mt-2 text-gray-500">{job.location}</p>
-              <p className="text-sm text-gray-500">
-                {job.daysPerWeek} өдөр • {job.shift} ээлж
-              </p>
+              <p className="text-sm text-gray-500 mt-1">{job.location}</p>
+              <p className="text-sm text-gray-500 mt-1">{job.daysPerWeek} өдөр • {job.shift} ээлж</p>
+
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={() => navigate(`/jobs/${job.id}`)}
+                  className="text-blue-600 text-sm hover:underline"
+                >
+                  Дэлгэрэнгүй
+                </button>
+                <button
+                  onClick={() => handleSendCV(job)}
+                  className="px-3 py-1 text-sm bg-[#2C3E50] text-white rounded-full hover:bg-[#1f2e3d]"
+                >
+                  CV илгээх
+                </button>
+              </div>
             </div>
           ))}
         </div>

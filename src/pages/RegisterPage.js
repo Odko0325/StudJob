@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import logo from '../assets/studjob.png';
 import Select from 'react-select';
-import DifferentHeader from '../components/DifferentHeader'; // ✅ зөв import
+import DifferentHeader from '../components/DifferentHeader'; 
 
 const RegisterPage = () => {
   const { registerUser } = useContext(UserContext);
@@ -110,7 +110,7 @@ const RegisterPage = () => {
                 >
                   <option value="student">Оюутан</option>
                   <option value="employer">Ажил олгогч</option>
-                  <option value="admin">Админ</option>
+                  
                 </select>
               </div>
 
